@@ -37,6 +37,20 @@ document.addEventListener('click', (e) => {
   }
 });
 
+/* ── Scroll-to-top FAB ──────────────────────────────────── */
+const scrollToTopBtn = document.querySelector('.scroll-to-top');
+
+window.addEventListener('scroll', () => {
+  scrollToTopBtn?.classList.toggle('visible', window.scrollY > 300);
+}, { passive: true });
+
+scrollToTopBtn?.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+
 /* ── Active nav link on scroll ───────────────────────────── */
 const sections = document.querySelectorAll('section[id]');
 const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');

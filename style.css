@@ -213,6 +213,39 @@ ul { list-style: none; }
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* ── Scroll-to-top FAB ──────────────────────────────────── */
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8);
+  transition: all .3s var(--ease);
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+}
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+.scroll-to-top:hover {
+  background: var(--accent);
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.16);
+}
+
 /* ==========================================================
    HERO
    ========================================================== */
@@ -989,6 +1022,13 @@ ul { list-style: none; }
   .nav-links.open { transform: translateY(0); }
   .nav-links a { font-size: 1rem; }
   .nav-toggle { display: flex; }
+  
+  .scroll-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+  }
 
   .hero-name {
     font-size: clamp(3rem, 13vw, 5rem);
