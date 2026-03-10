@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omkar Khandalkar — Senior UI Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   CSS VARIABLES — LIGHT & DARK THEMES
+================================================================ */
+:root {
+  --ink: #0d0d0d;
+  --paper: #f5f0e8;
+  --cream: #ede8dc;
+  --surface: #e6e0d4;
+  --accent: #c8522a;
+  --accent2: #2a6cc8;
+  --accent3: #9b59b6;
+  --green: #27ae60;
+  --muted: #7a7468;
+  --line: rgba(13,13,13,0.11);
+  --shadow: rgba(0,0,0,0.08);
+  --nav-bg: rgba(245,240,232,0.9);
+  --gap: clamp(1.8rem, 4vw, 4.5rem);
+  --theme-toggle-icon: "☀";
+}
+[data-theme="dark"] {
+  --ink: #f0ebe3;
+  --paper: #111010;
+  --cream: #1a1916;
+  --surface: #222120;
+  --accent: #e06b3a;
+  --accent2: #5a9ade;
+  --accent3: #b07fd0;
+  --green: #40c070;
+  --muted: #888078;
+  --line: rgba(240,235,227,0.1);
+  --shadow: rgba(0,0,0,0.4);
+  --nav-bg: rgba(17,16,16,0.92);
+  --theme-toggle-icon: "☽";
+}
+
+/* ================================================================
+   RESET & BASE
+================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+  cursor: none;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ================================================================
+   NOISE TEXTURE
+================================================================ */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 2000; opacity: 0.5;
+}
+
+/* ================================================================
+   CUSTOM CURSOR
+================================================================ */
+.cursor {
+  position: fixed; width: 11px; height: 11px;
+  background: var(--accent); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, background .3s;
+}
+.cursor-ring {
+  position: fixed; width: 34px; height: 34px;
+  border: 1.5px solid var(--ink); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: border-color .3s;
+}
+.cursor-ring.big { width: 52px; height: 52px; }
+
+/* ================================================================
+   NAVIGATION
+================================================================ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.3rem var(--gap);
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  transition: background .4s, border-color .4s;
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem;
+  letter-spacing: -0.02em; color: var(--ink); text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 2.5rem; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-family: 'DM Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none; position: relative; padding-bottom: 2px;
+  transition: color .2s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 1px; background: var(--accent); transition: width .3s ease;
+}
+.nav-links a:hover::after { width: 100%; }
+
+/* THEME TOGGLE */
+.theme-toggle {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1.5px solid var(--line); background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; cursor: none;
+  transition: background .3s, border-color .3s, transform .2s;
+}
+.theme-toggle:hover { transform: rotate(15deg); background: var(--surface); }
+
+/* ================================================================
+   HERO
+================================================================ */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding-top: 5rem;
+  border-bottom: 1px solid var(--line);
+}
+.hero-left {
+  padding: var(--gap); display: flex; flex-direction: column;
+  justify-content: center; border-right: 1px solid var(--line);
+}
+.hero-eyebrow {
+  font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.hero-eyebrow::before {
+  content: ''; display: inline-block; width: 36px; height: 1px; background: var(--accent);
+}
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 7.5vw, 7.5rem);
+  font-weight: 300; line-height: 0.9; letter-spacing: -0.02em; margin-bottom: 1.8rem;
+}
+.hero-name em { font-style: italic; color: var(--accent); }
+.hero-tagline {
+  font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 500;
+  color: var(--accent2); letter-spacing: 0.06em; margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+.hero-bio {
+  font-size: 0.8rem; line-height: 1.85; color: var(--muted);
+  max-width: 440px; margin-bottom: 2.5rem;
+}
+.hero-bio strong { color: var(--ink); }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.8rem;
+  font-family: 'DM Mono', monospace; font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--paper); background: var(--ink); text-decoration: none;
+  padding: 0.95rem 1.6rem;
+  position: relative; overflow: hidden; transition: color .3s;
+  border: 1px solid var(--ink);
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0; background: var(--accent);
+  transform: translateX(-101%); transition: transform .4s cubic-bezier(.77,0,.18,1);
+}
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 0.8rem;
+  font-family: 'DM Mono', monospace; font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  padding: 0.95rem 1.6rem; border: 1px solid var(--line);
+  background: transparent; transition: border-color .3s, background .3s;
+}
+.btn-outline:hover { border-color: var(--accent); background: var(--cream); }
+
+.hero-right {
+  display: flex; flex-direction: column; padding: var(--gap);
+}
+.hero-image-box {
+  flex: 1; min-height: 300px; background: var(--cream);
+  border: 1px solid var(--line); position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .4s;
+}
+.hero-avatar-svg { width: 100%; height: 100%; min-height: 280px; }
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line); margin-top: 1.5rem;
+}
+.hero-stat { padding: 1.3rem 0; text-align: center; }
+.hero-stat:not(:last-child) { border-right: 1px solid var(--line); }
+.hero-stat-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 2.4rem;
+  font-weight: 300; line-height: 1; color: var(--accent);
+}
+.hero-stat-label {
+  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-top: 0.3rem;
+}
+
+/* ================================================================
+   MARQUEE
+================================================================ */
+.marquee-strip {
+  border-top: 1px solid var(--line); overflow: hidden;
+  padding: 0.9rem 0; background: var(--ink);
+  transition: background .4s;
+}
+.marquee-inner {
+  display: flex; gap: 2.5rem;
+  animation: marquee 26s linear infinite; white-space: nowrap;
+}
+.marquee-item {
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--paper); display: flex; align-items: center; gap: 1.2rem; flex-shrink: 0;
+  transition: color .4s;
+}
+.marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ================================================================
+   SECTION STRUCTURE
+================================================================ */
+section { padding: calc(var(--gap) * 1.8) var(--gap); border-top: 1px solid var(--line); }
+.section-label {
+  font-size: 0.63rem; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.section-label::after { content: ''; height: 1px; background: var(--line); width: 50px; }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 4.5vw, 4.5rem);
+  font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 2.5rem;
+}
+.section-title em { font-style: italic; color: var(--accent); }
+
+/* ================================================================
+   ABOUT
+================================================================ */
+.about-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3.5rem; align-items: start; }
+.about-text p { font-size: 0.8rem; line-height: 1.95; color: var(--muted); margin-bottom: 1.4rem; }
+.about-text p strong { color: var(--ink); font-weight: 500; }
+.about-quote {
+  border-left: 2px solid var(--accent); padding-left: 1.2rem;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 1.2rem; line-height: 1.6; color: var(--ink);
+  margin: 2rem 0;
+}
+.services-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--line); border: 1px solid var(--line);
+}
+.service-card {
+  background: var(--paper); padding: 1.8rem;
+  transition: background .3s;
+}
+.service-card:hover { background: var(--cream); }
+.service-icon { font-size: 1.3rem; margin-bottom: 0.9rem; }
+.service-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 600; margin-bottom: 0.5rem; }
+.service-desc { font-size: 0.7rem; line-height: 1.75; color: var(--muted); }
+
+/* ================================================================
+   CASE STUDIES
+================================================================ */
+.cases-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; flex-wrap: wrap; gap: 1.5rem; }
+.case-study {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line); margin-bottom: 2px; overflow: hidden;
+  transition: box-shadow .3s;
+}
+.case-study:hover { box-shadow: 0 8px 40px var(--shadow); }
+.case-study.reverse { direction: rtl; }
+.case-study.reverse > * { direction: ltr; }
+.case-visual {
+  background: var(--cream); min-height: 460px; position: relative;
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+  transition: background .4s;
+}
+.case-visual-inner {
+  width: 82%; height: 72%; border-radius: 6px; overflow: hidden;
+  box-shadow: 0 20px 60px var(--shadow); transition: transform .5s ease;
+}
+.case-study:hover .case-visual-inner { transform: translateY(-6px); }
+
+/* Mock screens */
+.mock-fintech { background: linear-gradient(135deg, #0a1628, #1a2f5a); padding: 1.2rem; height: 100%; display: flex; flex-direction: column; gap: 0.8rem; }
+.mock-bar-b { background: rgba(255,255,255,0.07); border-radius: 5px; height: 9px; }
+.mock-card-row { display: flex; gap: 0.7rem; }
+.mock-mini { flex: 1; background: rgba(255,255,255,0.05); border-radius: 7px; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.08); }
+.mock-num-b { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #6eb5ff; }
+.mock-sub { font-family: 'DM Mono', monospace; font-size: 0.45rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
+.mock-chart { flex: 1; background: rgba(255,255,255,0.03); border-radius: 7px; padding: 0.9rem; display: flex; align-items: flex-end; gap: 3px; }
+.mock-bar-c { flex: 1; background: rgba(110,181,255,0.28); border-radius: 2px; }
+
+.mock-lms { background: #fff; height: 100%; display: grid; grid-template-columns: 48px 1fr; }
+.mock-sb { background: #1a1d2e; display: flex; flex-direction: column; align-items: center; padding: 1rem 0; gap: 0.9rem; }
+.mock-sb-dot { width: 24px; height: 24px; border-radius: 5px; background: rgba(255,255,255,0.07); }
+.mock-sb-dot.a { background: var(--accent); }
+.mock-m { padding: 1rem; }
+.mock-prog-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+.mock-pc { background: #f8f7ff; border-radius: 5px; padding: 0.6rem; }
+.mock-pb { height: 4px; background: #e5e3f0; border-radius: 2px; margin-top: 5px; overflow: hidden; }
+.mock-pf { height: 100%; background: var(--accent2); border-radius: 2px; }
+
+.mock-ecom { background: #fafaf8; height: 100%; display: flex; flex-direction: column; padding: 1.1rem; gap: 0.7rem; }
+.mock-pg { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.5rem; flex: 1; }
+.mock-prod { border-radius: 5px; overflow: hidden; border: 1px solid #eee; display: flex; flex-direction: column; }
+.mock-pimg { flex: 1; min-height: 52px; }
+.mock-pinfo { padding: 0.35rem; background: white; }
+.mock-pn { height: 4px; background: #ddd; border-radius: 2px; margin-bottom: 3px; }
+.mock-pp { height: 4px; width: 50%; background: var(--accent); opacity: 0.35; border-radius: 2px; }
+
+.case-info {
+  padding: 2.8rem; display: flex; flex-direction: column;
+  justify-content: center; gap: 1.1rem;
+}
+.case-number {
+  font-family: 'Cormorant Garamond', serif; font-size: 4.5rem;
+  font-weight: 300; color: var(--line); line-height: 1;
+}
+.case-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.case-tag {
+  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.25rem 0.7rem; border: 1px solid var(--line); color: var(--muted);
+}
+.case-title { font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; font-weight: 400; line-height: 1.15; }
+.case-summary { font-size: 0.76rem; line-height: 1.88; color: var(--muted); }
+
+/* Case study expandable */
+.case-details { border-top: 1px solid var(--line); margin-top: 1.4rem; padding-top: 1.4rem; display: none; }
+.case-details.open { display: block; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.8rem; }
+.detail-section-title {
+  font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.65rem;
+}
+.detail-text { font-size: 0.73rem; line-height: 1.9; color: var(--muted); }
+.detail-text strong { color: var(--ink); }
+.metrics-row {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 1.4rem 0;
+}
+.metric-box { background: var(--cream); padding: 1.3rem; text-align: center; transition: background .4s; }
+.metric-val { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--accent); }
+.metric-lbl { font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+.process-steps {
+  display: grid; grid-template-columns: repeat(5,1fr);
+  gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 1.4rem 0;
+}
+.process-step { background: var(--paper); padding: 0.9rem; transition: background .4s; }
+.step-num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: var(--line); line-height: 1; }
+.step-name { font-family: 'Syne', sans-serif; font-size: 0.66rem; font-weight: 600; margin-top: 0.3rem; margin-bottom: 0.3rem; }
+.step-desc { font-size: 0.6rem; line-height: 1.6; color: var(--muted); }
+.toggle-btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent); background: none; border: none;
+  cursor: none; padding: 0; transition: gap .2s;
+}
+.toggle-btn:hover { gap: 1rem; }
+.toggle-arrow { transition: transform .3s; display: inline-block; }
+.toggle-btn.open .toggle-arrow { transform: rotate(90deg); }
+
+/* ================================================================
+   SKILLS
+================================================================ */
+.skills-section { background: var(--ink); transition: background .4s; }
+.skills-section .section-title { color: var(--paper); }
+.skills-section .section-label { color: rgba(240,235,227,0.35); }
+.skills-section .section-label::after { background: rgba(240,235,227,0.12); }
+.skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.07); margin-top: 2.5rem; }
+.skill-group { background: var(--ink); padding: 1.8rem; transition: background .3s; }
+.skill-group:hover { background: color-mix(in srgb, var(--ink) 80%, var(--cream) 20%); }
+.skill-group-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.1rem; }
+.skill-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.skill-list li { font-size: 0.7rem; color: rgba(240,235,227,0.6); display: flex; align-items: center; gap: 0.55rem; }
+.skill-list li::before { content: '→'; color: var(--accent); font-size: 0.62rem; }
+
+/* ================================================================
+   EXPERIENCE
+================================================================ */
+.exp-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 3.5rem; }
+.exp-sidebar { position: sticky; top: 5.5rem; align-self: start; }
+.exp-list { display: flex; flex-direction: column; }
+.exp-item {
+  padding: 2.2rem 0; border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 120px 1fr; gap: 2rem;
+}
+.exp-period { font-size: 0.65rem; color: var(--muted); padding-top: 0.2rem; line-height: 1.6; }
+.exp-company { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.15rem; }
+.exp-role { font-size: 0.7rem; color: var(--accent); margin-bottom: 0.8rem; letter-spacing: 0.04em; }
+.exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.exp-bullets li { font-size: 0.73rem; line-height: 1.7; color: var(--muted); display: grid; grid-template-columns: 14px 1fr; gap: 0.4rem; }
+.exp-bullets li::before { content: '—'; color: var(--accent); }
+.exp-badge {
+  display: inline-block; font-size: 0.6rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 0.2rem 0.6rem;
+  background: var(--cream); border: 1px solid var(--line);
+  color: var(--muted); margin-top: 0.8rem; transition: background .4s;
+}
+.download-btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--paper); background: var(--ink);
+  padding: 0.85rem 1.3rem; text-decoration: none; transition: background .3s;
+  margin-top: 1.5rem; border: 1px solid var(--line);
+}
+.download-btn:hover { background: var(--accent); }
+
+/* ================================================================
+   GALLERY (Photography / Graphics / AI Art)
+================================================================ */
+.gallery-tabs {
+  display: flex; gap: 0; margin-bottom: 2.5rem;
+  border: 1px solid var(--line); width: fit-content;
+}
+.gallery-tab {
+  font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 0.7rem 1.4rem;
+  background: transparent; border: none; border-right: 1px solid var(--line);
+  color: var(--muted); cursor: none; transition: background .2s, color .2s;
+}
+.gallery-tab:last-child { border-right: none; }
+.gallery-tab.active { background: var(--ink); color: var(--paper); }
+.gallery-panel { display: none; }
+.gallery-panel.active { display: block; }
+.gallery-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+.gallery-item {
+  position: relative; overflow: hidden; aspect-ratio: 4/3;
+  background: var(--cream); cursor: none;
+  transition: background .4s;
+}
+.gallery-item.square { aspect-ratio: 1/1; }
+.gallery-item img, .gallery-item .gallery-placeholder {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s ease;
+}
+.gallery-item:hover img,
+.gallery-item:hover .gallery-placeholder { transform: scale(1.04); }
+.gallery-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0); display: flex;
+  flex-direction: column; align-items: flex-start; justify-content: flex-end;
+  padding: 1.2rem; transition: background .3s;
+}
+.gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.45); }
+.gallery-caption {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: white; opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s;
+}
+.gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+/* Featured first item */
+.gallery-item.featured {
+  grid-column: span 2; aspect-ratio: 2/1;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.94);
+  z-index: 800; display: none; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.lightbox.open { display: flex; }
+.lightbox-img {
+  max-width: 90vw; max-height: 85vh; width: auto; height: auto;
+  object-fit: contain;
+}
+.lightbox-img-wrap {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.lightbox-img-wrap img { max-width: 88vw; max-height: 82vh; object-fit: contain; }
+.lightbox-close {
+  position: fixed; top: 1.5rem; right: 1.5rem;
+  font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.7);
+  background: none; border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.5rem 1rem; cursor: none; transition: color .2s, border-color .2s;
+}
+.lightbox-close:hover { color: white; border-color: white; }
+.lightbox-nav {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  font-size: 1.5rem; background: none; border: none;
+  color: rgba(255,255,255,0.6); cursor: none; padding: 1rem;
+  transition: color .2s;
+}
+.lightbox-nav:hover { color: white; }
+.lightbox-nav.prev { left: 1rem; }
+.lightbox-nav.next { right: 1rem; }
+
+/* ================================================================
+   ACTIVITIES / COMMUNITY
+================================================================ */
+.activities-intro {
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 3.5rem;
+  align-items: start; margin-bottom: 3.5rem;
+}
+.activities-intro p { font-size: 0.79rem; line-height: 1.9; color: var(--muted); margin-bottom: 1rem; }
+.activities-intro p strong { color: var(--ink); }
+.activity-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.activity-stat-box { background: var(--paper); padding: 1.5rem; transition: background .4s; }
+.activity-stat-box:hover { background: var(--cream); }
+.ast-num { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 300; color: var(--accent); line-height: 1; }
+.ast-label { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+
+.activities-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-bottom: 3rem; }
+.activity-card {
+  background: var(--cream); padding: 2rem; position: relative;
+  border: 1px solid var(--line); transition: background .3s, transform .2s;
+}
+.activity-card:hover { background: var(--surface); transform: translateY(-2px); }
+.ac-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+.ac-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+.ac-subtitle { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+.ac-desc { font-size: 0.72rem; line-height: 1.78; color: var(--muted); }
+.ac-badge {
+  display: inline-block; margin-top: 1rem; font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.2rem 0.6rem; background: var(--paper);
+  border: 1px solid var(--line); color: var(--muted); transition: background .4s;
+}
+
+/* Activity Gallery */
+.activity-gallery { margin-top: 2.5rem; }
+.activity-gallery-title {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: 0.7rem;
+}
+.activity-gallery-title::after { content: ''; flex: 1; height: 1px; background: var(--line); max-width: 80px; }
+.activity-gallery-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.activity-gallery-item {
+  aspect-ratio: 3/2; overflow: hidden; background: var(--cream);
+  position: relative; cursor: none;
+}
+.activity-gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.activity-gallery-item:hover img { transform: scale(1.05); }
+.activity-gallery-item.wide { grid-column: span 2; }
+
+/* ================================================================
+   CODEOS SECTION
+================================================================ */
+.codeos-section { background: var(--ink); transition: background .4s; }
+.codeos-section .section-title { color: var(--paper); }
+.codeos-section .section-label { color: rgba(240,235,227,0.35); }
+.codeos-section .section-label::after { background: rgba(240,235,227,0.12); }
+.codeos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+.codeos-text p { font-size: 0.78rem; line-height: 1.9; color: rgba(240,235,227,0.6); margin-bottom: 1.2rem; }
+.codeos-text p strong { color: var(--paper); }
+.codeos-metrics { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.07); }
+.codeos-m { background: var(--ink); padding: 1.5rem; transition: background .3s; }
+.codeos-m:hover { background: #1e1c1b; }
+.codeos-m-num { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--accent); line-height: 1; }
+.codeos-m-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(240,235,227,0.4); margin-top: 0.3rem; }
+.podcast-list { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1.8rem; }
+.podcast-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.9rem 1rem; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  font-size: 0.72rem; color: rgba(240,235,227,0.65);
+  transition: background .2s;
+}
+.podcast-item:hover { background: rgba(255,255,255,0.08); }
+.podcast-play {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; color: white;
+}
+
+/* ================================================================
+   CONTACT
+================================================================ */
+.contact-section { background: var(--cream); transition: background .4s; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; align-items: start; }
+.contact-info-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3.2rem); font-weight: 300; line-height: 1.1; margin-bottom: 2rem; }
+.contact-info-title em { font-style: italic; color: var(--accent); }
+.contact-detail { display: flex; flex-direction: column; gap: 1.3rem; margin-bottom: 2.5rem; }
+.contact-item { display: flex; gap: 1.1rem; align-items: flex-start; }
+.contact-icon { width: 34px; height: 34px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.8rem; background: var(--paper); transition: background .4s; }
+.contact-item-label { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.15rem; }
+.contact-item-val { font-size: 0.8rem; color: var(--ink); }
+.form-group { margin-bottom: 1.4rem; }
+.form-label { display: block; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.form-input, .form-textarea {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid var(--line); padding: 0.65rem 0;
+  font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--ink);
+  outline: none; transition: border-color .3s; resize: none;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+.submit-btn {
+  display: inline-flex; align-items: center; gap: 0.9rem;
+  font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--paper); background: var(--ink);
+  border: none; padding: 1.05rem 1.8rem; cursor: none; transition: background .3s; margin-top: 0.8rem;
+}
+.submit-btn:hover { background: var(--accent); }
+
+/* ================================================================
+   FOOTER
+================================================================ */
+footer {
+  padding: 1.8rem var(--gap); border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy { font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+.footer-links { display: flex; gap: 1.8rem; }
+.footer-links a { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--accent); }
+
+/* ================================================================
+   SCROLL REVEAL
+================================================================ */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .about-grid, .contact-grid, .exp-grid, .activities-intro, .codeos-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .exp-sidebar { position: static; }
+  .case-study, .case-study.reverse { grid-template-columns: 1fr; direction: ltr; }
+  .case-visual { min-height: 240px; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .activities-cards { grid-template-columns: 1fr 1fr; }
+  .activity-gallery-grid { grid-template-columns: repeat(2,1fr); }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-item.featured { grid-column: span 2; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: repeat(3,1fr); }
+  .hero-stats { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .skills-grid, .activities-cards, .gallery-grid { grid-template-columns: 1fr; }
+  .gallery-item.featured { grid-column: span 1; aspect-ratio: 4/3; }
+  .exp-item { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .metrics-row { grid-template-columns: 1fr; }
+  .activity-gallery-grid { grid-template-columns: 1fr 1fr; }
+  .activity-gallery-item.wide { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+  <button class="lightbox-nav prev" onclick="lightboxNav(-1)">‹</button>
+  <div class="lightbox-img-wrap">
+    <img id="lightboxImg" src="" alt="">
+  </div>
+  <button class="lightbox-nav next" onclick="lightboxNav(1)">›</button>
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-logo">OK<span>.</span></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#creative">Creative</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+  </div>
+</nav>
+
+<!-- ================================================================
+     HERO
+================================================================ -->
+<section class="hero" style="border-top:none; padding:0; padding-top:5rem;">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Senior UI Designer · Accessible Design · EdTech</div>
+    <h1 class="hero-name">Omkar<br><em>Khandalkar</em></h1>
+    <div class="hero-tagline">Behavior Design × Persuasive UX</div>
+    <p class="hero-bio">
+      I believe impactful products go beyond static tools — they evolve into <strong>actions, habits, even verbs.</strong>
+      At Zeus Learning, I design inclusive platforms for 1M+ learners, blending behavioral psychology with meticulous craft to create experiences that <strong>empower every learner</strong> regardless of ability or background.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary"><span>View Case Studies</span><span>↓</span></a>
+      <a href="#contact" class="btn-outline">Get in Touch →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-box">
+      <svg class="hero-avatar-svg" viewBox="0 0 480 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--cream)"/><stop offset="100%" stop-color="var(--surface)"/></linearGradient>
+          <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8c4a0"/><stop offset="100%" stop-color="#d4a882"/></linearGradient>
+        </defs>
+        <rect width="480" height="500" fill="url(#bg0)"/>
+        <!-- subtle grid -->
+        <line x1="0" y1="166" x2="480" y2="166" stroke="#c8522a" stroke-width="0.5" opacity="0.07"/>
+        <line x1="0" y1="332" x2="480" y2="332" stroke="#c8522a" stroke-width="0.5" opacity="0.07"/>
+        <line x1="160" y1="0" x2="160" y2="500" stroke="#c8522a" stroke-width="0.5" opacity="0.05"/>
+        <line x1="320" y1="0" x2="320" y2="500" stroke="#c8522a" stroke-width="0.5" opacity="0.05"/>
+        <!-- body -->
+        <ellipse cx="240" cy="520" rx="155" ry="105" fill="#1a1d2e"/>
+        <!-- neck -->
+        <rect x="212" y="322" width="56" height="52" rx="8" fill="url(#sk)"/>
+        <!-- head -->
+        <ellipse cx="240" cy="278" rx="85" ry="92" fill="url(#sk)"/>
+        <!-- hair -->
+        <ellipse cx="240" cy="204" rx="87" ry="54" fill="#1a0e08"/>
+        <ellipse cx="157" cy="256" rx="17" ry="36" fill="#1a0e08"/>
+        <ellipse cx="323" cy="256" rx="17" ry="36" fill="#1a0e08"/>
+        <!-- eyes -->
+        <ellipse cx="210" cy="272" rx="11" ry="9.5" fill="white"/>
+        <ellipse cx="270" cy="272" rx="11" ry="9.5" fill="white"/>
+        <circle cx="213" cy="273" r="6.5" fill="#2a1a0e"/>
+        <circle cx="273" cy="273" r="6.5" fill="#2a1a0e"/>
+        <circle cx="215" cy="270" r="2" fill="white"/>
+        <circle cx="275" cy="270" r="2" fill="white"/>
+        <!-- eyebrows -->
+        <path d="M198 257 Q212 251 224 257" stroke="#1a0e08" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M256 257 Q268 251 282 257" stroke="#1a0e08" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <!-- glasses -->
+        <rect x="194" y="263" width="34" height="19" rx="7" stroke="#c8522a" stroke-width="1.7" fill="none"/>
+        <rect x="247" y="263" width="34" height="19" rx="7" stroke="#c8522a" stroke-width="1.7" fill="none"/>
+        <line x1="228" y1="272" x2="247" y2="272" stroke="#c8522a" stroke-width="1.7"/>
+        <!-- nose -->
+        <path d="M234 293 Q240 308 246 293" stroke="#c49070" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <!-- smile -->
+        <path d="M222 320 Q240 334 258 320" stroke="#b07050" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- collar -->
+        <path d="M202 372 L240 398 L278 372" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" fill="none"/>
+      </svg>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">2.5+</div><div class="hero-stat-label">Years at Zeus</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">1M+</div><div class="hero-stat-label">Users Served</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">500+</div><div class="hero-stat-label">Students Mentored</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">25+</div><div class="hero-stat-label">Workshops</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <div class="marquee-item"><span class="marquee-dot"></span>Accessible Design</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Behavior Design</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>WCAG Compliance</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>EdTech</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>LMS · CMS</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Figma</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Design Systems</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Persuasive UX</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Frontend Dev</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Podcast Host</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Accessible Design</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Behavior Design</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>WCAG Compliance</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>EdTech</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>LMS · CMS</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Figma</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Design Systems</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Persuasive UX</div>
+  </div>
+</div>
+
+<!-- ================================================================
+     ABOUT
+================================================================ -->
+<section id="about">
+  <div class="section-label">01 — About Me</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="section-title">Design that<br><em>becomes</em><br>a verb.</h2>
+      <div class="about-text">
+        <div class="about-quote">"When a product becomes part of someone's story, that is when it truly succeeds."</div>
+        <p>I'm <strong>Omkar Khandalkar</strong>, a Senior UI Designer at Zeus Learning (Mumbai) with a background in Electronics & Telecommunication Engineering. My path from engineering to design was intentional — I was always more fascinated by <strong>why people use things</strong> than how they're built.</p>
+        <p>The intersection of <strong>psychology, behavioral economics, and design thinking</strong> drives everything I do. I design for the full spectrum of learners — ensuring WCAG compliance, supporting diverse cognitive styles, and creating platforms where education truly feels like a universal right.</p>
+        <p>Beyond screens, I founded <strong>CodeOS</strong> — an edtech initiative where I've mentored 500+ students, hosted 25+ workshops, and built a YouTube community of 1,000+ learners. I'm also a podcast host, photographer, and graphic artist.</p>
+      </div>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-icon">◈</div>
+        <div class="service-title">UX & Behavior Design</div>
+        <div class="service-desc">Designing with psychology and persuasive principles — nudges, habits, flows that feel effortless.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">⬡</div>
+        <div class="service-title">Accessible & Inclusive UI</div>
+        <div class="service-desc">WCAG-compliant, device-responsive interfaces built for every learner, ability, and context.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">⌘</div>
+        <div class="service-title">Frontend Development</div>
+        <div class="service-desc">Next.js, React, Tailwind CSS — bridging design and code for seamless handoffs and implementations.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">◎</div>
+        <div class="service-title">Education & Mentorship</div>
+        <div class="service-desc">Teaching design and development through CodeOS, bootcamps, podcasts, and community events.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CASE STUDIES
+================================================================ -->
+<section id="work">
+  <div class="cases-header">
+    <div>
+      <div class="section-label">02 — Selected Work</div>
+      <h2 class="section-title" style="margin-bottom:0">Case<br><em>Studies</em></h2>
+    </div>
+    <p style="font-size:0.73rem; color:var(--muted); max-width:230px; line-height:1.75;">Full UX process included. Click to expand each study.</p>
+  </div>
+
+  <!-- CS1: Zeus LMS -->
+  <div class="case-study reveal" id="cs1">
+    <div class="case-visual">
+      <div class="case-visual-inner">
+        <div class="mock-lms">
+          <div class="mock-sb">
+            <div class="mock-sb-dot a"></div>
+            <div class="mock-sb-dot"></div>
+            <div class="mock-sb-dot"></div>
+            <div class="mock-sb-dot"></div>
+            <div class="mock-sb-dot"></div>
+          </div>
+          <div class="mock-m">
+            <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:1rem;"><div style="width:26px;height:26px;border-radius:50%;background:#e0d8f0;"></div><div style="height:7px;background:#eee;border-radius:4px;flex:1;"></div></div>
+            <div style="height:5px;background:#eee;border-radius:3px;width:50%;margin-bottom:14px;"></div>
+            <div class="mock-prog-cards">
+              <div class="mock-pc"><div style="height:5px;background:#ddd;border-radius:3px;width:80%;margin-bottom:5px;"></div><div class="mock-pb"><div class="mock-pf" style="width:72%;"></div></div></div>
+              <div class="mock-pc"><div style="height:5px;background:#ddd;border-radius:3px;width:60%;margin-bottom:5px;"></div><div class="mock-pb"><div class="mock-pf" style="width:45%;"></div></div></div>
+              <div class="mock-pc"><div style="height:5px;background:#ddd;border-radius:3px;width:70%;margin-bottom:5px;"></div><div class="mock-pb"><div class="mock-pf" style="width:88%;"></div></div></div>
+              <div class="mock-pc"><div style="height:5px;background:#ddd;border-radius:3px;width:55%;margin-bottom:5px;"></div><div class="mock-pb"><div class="mock-pf" style="width:30%;"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="case-info">
+      <div class="case-number">01</div>
+      <div class="case-tags"><span class="case-tag">EdTech</span><span class="case-tag">LMS / CMS</span><span class="case-tag">Accessibility</span><span class="case-tag">Design System</span></div>
+      <h3 class="case-title">Zeus Learning — LMS Platform Overhaul</h3>
+      <p class="case-summary">A comprehensive redesign of legacy LMS and CMS platforms serving enterprise education clients, achieving WCAG compliance and building the company's first scalable design system — all while supporting 32 developers across active sprints.</p>
+      <button class="toggle-btn" onclick="toggleCase('cs1d', this)"><span class="toggle-arrow">→</span><span>Read Case Study</span></button>
+      <div class="case-details" id="cs1d">
+        <div class="metrics-row">
+          <div class="metric-box"><div class="metric-val">WCAG</div><div class="metric-lbl">AA Compliant — First Time</div></div>
+          <div class="metric-box"><div class="metric-val">80+</div><div class="metric-lbl">Figma Components Built</div></div>
+          <div class="metric-box"><div class="metric-val">32</div><div class="metric-lbl">Developers Supported</div></div>
+        </div>
+        <div class="detail-grid">
+          <div><div class="detail-section-title">The Challenge</div><p class="detail-text">The LMS had accumulated 12 years of inconsistent patterns, zero design documentation, and no accessibility standards. Students averaged 4+ clicks to reach content. The platform needed to serve learners aged 12–70 across 6 countries, on devices from MacBooks to low-end Android phones — without breaking 200+ existing school integrations.</p></div>
+          <div><div class="detail-section-title">My Role as Senior Lead</div><p class="detail-text">Promoted to Senior UI Designer, I owned <strong>sprint planning, design direction, and quality reviews</strong> for 2 junior designers. I was the primary design liaison for 32 developers and 8 QA engineers, and presented directly to the VP of Product. Every major interaction pattern went through my review before implementation.</p></div>
+        </div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num">01</div><div class="step-name">Audit</div><div class="step-desc">Heuristic review of 14 modules, 340 accessibility violations catalogued</div></div>
+          <div class="process-step"><div class="step-num">02</div><div class="step-name">Research</div><div class="step-desc">Stakeholder interviews, student focus groups, session recording analysis</div></div>
+          <div class="process-step"><div class="step-num">03</div><div class="step-name">IA Redesign</div><div class="step-desc">Card sorting, tree testing, new information architecture</div></div>
+          <div class="process-step"><div class="step-num">04</div><div class="step-name">Design System</div><div class="step-desc">80+ component library, design tokens, full Figma documentation</div></div>
+          <div class="process-step"><div class="step-num">05</div><div class="step-name">Phased Delivery</div><div class="step-desc">4-sprint rollout, A/B tests per module, continuous QA collaboration</div></div>
+        </div>
+        <div class="detail-grid">
+          <div><div class="detail-section-title">Accessibility Focus</div><p class="detail-text">Fixed all 340 violations using axe-DevTools and VoiceOver testing. Introduced proper heading hierarchies, skip nav links, visible focus states, and WCAG-compliant contrast ratios. The platform achieved <strong>WCAG 2.1 AA</strong> — its first accessibility certification in 12 years. Designed to support diverse learning styles and cognitive needs.</p></div>
+          <div><div class="detail-section-title">Design System Impact</div><p class="detail-text">Built the company's <strong>first-ever design system</strong> — 80+ components with dark mode support, RTL-ready layouts, design tokens, and developer-facing documentation. Engineers now ship UI updates 60% faster with consistent, tested components. All patterns document accessibility requirements alongside visual specs.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CS2: Clio Fintech -->
+  <div class="case-study reverse reveal" id="cs2">
+    <div class="case-visual">
+      <div class="case-visual-inner">
+        <div class="mock-fintech">
+          <div class="mock-bar-b" style="width:65%;height:11px;margin-bottom:3px;"></div>
+          <div class="mock-bar-b" style="width:42%;height:7px;opacity:.5;"></div>
+          <div class="mock-card-row">
+            <div class="mock-mini"><div class="mock-num-b">₹2.4L</div><div class="mock-sub">Portfolio Value</div></div>
+            <div class="mock-mini"><div class="mock-num-b" style="color:#4ade80;">+12.4%</div><div class="mock-sub">Returns YTD</div></div>
+          </div>
+          <div class="mock-chart">
+            <div class="mock-bar-c" style="height:28%;"></div><div class="mock-bar-c" style="height:52%;"></div>
+            <div class="mock-bar-c" style="height:38%;"></div><div class="mock-bar-c" style="height:70%;"></div>
+            <div class="mock-bar-c" style="height:48%;"></div><div class="mock-bar-c" style="height:85%;"></div>
+            <div class="mock-bar-c" style="height:62%;"></div><div class="mock-bar-c" style="height:90%;"></div>
+          </div>
+          <div style="display:flex;gap:7px;">
+            <div style="flex:1;height:28px;background:rgba(110,181,255,.18);border-radius:5px;border:1px solid rgba(110,181,255,.3);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:.45rem;color:rgba(255,255,255,.7);letter-spacing:.08em;">AI SUGGEST</span></div>
+            <div style="flex:1;height:28px;background:rgba(200,82,42,.18);border-radius:5px;border:1px solid rgba(200,82,42,.35);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:.45rem;color:rgba(255,255,255,.7);letter-spacing:.08em;">REBALANCE</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="case-info">
+      <div class="case-number">02</div>
+      <div class="case-tags"><span class="case-tag">Fintech</span><span class="case-tag">AI Feature</span><span class="case-tag">0→1</span><span class="case-tag">Mobile</span></div>
+      <h3 class="case-title">Clio — AI Investment Assistant</h3>
+      <p class="case-summary">Designing an intelligent portfolio companion that helps first-time Indian retail investors navigate complex financial decisions with confidence — without requiring financial literacy as a prerequisite.</p>
+      <button class="toggle-btn" onclick="toggleCase('cs2d', this)"><span class="toggle-arrow">→</span><span>Read Case Study</span></button>
+      <div class="case-details" id="cs2d">
+        <div class="metrics-row">
+          <div class="metric-box"><div class="metric-val">68%</div><div class="metric-lbl">Drop in Decision Anxiety</div></div>
+          <div class="metric-box"><div class="metric-val">4.8★</div><div class="metric-lbl">App Store Rating</div></div>
+          <div class="metric-box"><div class="metric-val">3.2×</div><div class="metric-lbl">Active Investor Growth</div></div>
+        </div>
+        <div class="detail-grid">
+          <div><div class="detail-section-title">The Problem</div><p class="detail-text">India has 80M+ demat accounts but only ~12% actively invest. Research revealed the barrier isn't capital — it's cognitive overload. Existing apps showed data but offered no guidance. 71% of users made investment decisions from WhatsApp forwards or YouTube influencers — not from within the app itself.</p></div>
+          <div><div class="detail-section-title">Design Solution</div><p class="detail-text">Clio is a conversational AI layer embedded within the portfolio view. Rather than a separate chatbot, it surfaces <strong>contextual nudges</strong> — "Your tech allocation increased 8% this week. Want me to suggest a rebalance?" This keeps advice within the action context, reducing the gap between insight and decision.</p></div>
+        </div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num">01</div><div class="step-name">Discovery</div><div class="step-desc">24 user interviews across 3 cities, competitive audit of 8 fintech apps</div></div>
+          <div class="process-step"><div class="step-num">02</div><div class="step-name">Define</div><div class="step-desc">Affinity mapping, persona creation, HMW statements, problem framing</div></div>
+          <div class="process-step"><div class="step-num">03</div><div class="step-name">Ideate</div><div class="step-desc">Crazy 8s workshops, AI conversation flow mapping, design studio</div></div>
+          <div class="process-step"><div class="step-num">04</div><div class="step-name">Prototype</div><div class="step-desc">Lo-fi wireframes → interactive Figma flows → animated prototypes</div></div>
+          <div class="process-step"><div class="step-num">05</div><div class="step-name">Test</div><div class="step-desc">3 rounds usability testing, A/B test on onboarding CTA variants</div></div>
+        </div>
+        <div class="detail-grid">
+          <div><div class="detail-section-title">Behavioral Design Principles</div><p class="detail-text"><strong>Plain language first:</strong> All AI suggestions written at Grade 7 reading level. <strong>Confidence indicators:</strong> Every suggestion shows reasoning users can expand. <strong>Undo safety net:</strong> All AI-initiated actions have a 30-second cancel window — building trust through reversibility. These principles directly apply behavioral economics research on decision-making.</p></div>
+          <div><div class="detail-section-title">Key Learning</div><p class="detail-text">Transparent AI builds trust faster than confident AI. Users trusted recommendations more when we showed the reasoning behind them. This became a core design principle across all subsequent work — <strong>explainability is a UX feature</strong>, not just an engineering concern.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CS3: Tryfit -->
+  <div class="case-study reveal" id="cs3">
+    <div class="case-visual">
+      <div class="case-visual-inner">
+        <div class="mock-ecom">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;">Tryfit</div>
+            <div style="display:flex;gap:5px;"><div style="width:18px;height:3px;background:#ddd;border-radius:2px;"></div><div style="width:12px;height:3px;background:#ddd;border-radius:2px;"></div></div>
+          </div>
+          <div style="height:5px;background:#eee;border-radius:3px;width:55%;margin-bottom:8px;"></div>
+          <div class="mock-pg">
+            <div class="mock-prod"><div class="mock-pimg" style="background:#e8dfd0;"></div><div class="mock-pinfo"><div class="mock-pn"></div><div class="mock-pp"></div></div></div>
+            <div class="mock-prod"><div class="mock-pimg" style="background:#d4e8d0;"></div><div class="mock-pinfo"><div class="mock-pn"></div><div class="mock-pp"></div></div></div>
+            <div class="mock-prod"><div class="mock-pimg" style="background:#d0dce8;"></div><div class="mock-pinfo"><div class="mock-pn"></div><div class="mock-pp"></div></div></div>
+            <div class="mock-prod"><div class="mock-pimg" style="background:#e8d0d8;"></div><div class="mock-pinfo"><div class="mock-pn"></div><div class="mock-pp"></div></div></div>
+            <div class="mock-prod"><div class="mock-pimg" style="background:#e8e0d0;"></div><div class="mock-pinfo"><div class="mock-pn"></div><div class="mock-pp"></div></div></div>
+            <div class="mock-prod"><div class="mock-pimg" style="background:#d8d0e8;"></div><div class="mock-pinfo"><div class="mock-pn"></div><div class="mock-pp"></div></div></div>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:6px;">
+            <div style="flex:1;height:32px;background:#111;border-radius:4px;display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:.5rem;color:white;letter-spacing:.07em;">AR TRY-ON</span></div>
+            <div style="flex:1;height:32px;background:#f0ece4;border-radius:4px;display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:.5rem;color:#111;letter-spacing:.07em;">SIZE GUIDE</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="case-info">
+      <div class="case-number">03</div>
+      <div class="case-tags"><span class="case-tag">E-commerce</span><span class="case-tag">AR/Mobile</span><span class="case-tag">Fashion</span><span class="case-tag">D2C</span></div>
+      <h3 class="case-title">Tryfit — Virtual Fashion Try-On App</h3>
+      <p class="case-summary">Solving fashion e-commerce's biggest pain point — the 30% return rate due to fit issues — through an AR-powered try-on experience designed at Corbin Technology Solutions.</p>
+      <button class="toggle-btn" onclick="toggleCase('cs3d', this)"><span class="toggle-arrow">→</span><span>Read Case Study</span></button>
+      <div class="case-details" id="cs3d">
+        <div class="metrics-row">
+          <div class="metric-box"><div class="metric-val">34%</div><div class="metric-lbl">Return Rate Reduction</div></div>
+          <div class="metric-box"><div class="metric-val">2.8×</div><div class="metric-lbl">Conversion Increase</div></div>
+          <div class="metric-box"><div class="metric-val">89%</div><div class="metric-lbl">User Confidence Score</div></div>
+        </div>
+        <div class="detail-grid">
+          <div><div class="detail-section-title">The Problem</div><p class="detail-text">Indian fashion e-commerce sees return rates of 25–35%, with 60% citing "wrong fit" or "didn't look as expected." Existing size charts are static and don't account for body shape variation. Users default to buying 2 sizes and returning one — costing retailers ₹2,000–4,000 per return in logistics.</p></div>
+          <div><div class="detail-section-title">Progressive Disclosure Redesign</div><p class="detail-text">Users resisted entering measurements upfront. Redesigned onboarding to collect data <strong>contextually</strong> — only requesting measurements when they're relevant. This reduced onboarding drop-off by 52%. The AR view defaults to a "drape view" showing how fabric flows, not just a flat overlay — addressing the emotional anxiety of online shopping.</p></div>
+        </div>
+        <div class="process-steps">
+          <div class="process-step"><div class="step-num">01</div><div class="step-name">Research</div><div class="step-desc">180 user surveys, 16 contextual interviews, AR landscape analysis</div></div>
+          <div class="process-step"><div class="step-num">02</div><div class="step-name">Collaborate</div><div class="step-desc">ML team body-mapping flow, measurement onboarding architecture</div></div>
+          <div class="process-step"><div class="step-num">03</div><div class="step-name">Prototype</div><div class="step-desc">Paper sketches → Figma → native iOS AR prototype</div></div>
+          <div class="process-step"><div class="step-num">04</div><div class="step-name">Test</div><div class="step-desc">In-person testing at 3 malls + remote sessions via Maze</div></div>
+          <div class="process-step"><div class="step-num">05</div><div class="step-name">Iterate</div><div class="step-desc">4 iteration cycles, error rate tracking, qualitative feedback synthesis</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SKILLS
+================================================================ -->
+<section class="skills-section">
+  <div class="section-label">03 — Skills &amp; Tools</div>
+  <h2 class="section-title">Tools &amp;<br><em>Expertise</em></h2>
+  <div class="skills-grid">
+    <div class="skill-group reveal"><div class="skill-group-title">Design Tools</div><ul class="skill-list"><li>Figma &amp; FigJam</li><li>Adobe XD</li><li>Adobe Illustrator</li><li>Framer</li><li>Sketch</li><li>InVision</li></ul></div>
+    <div class="skill-group reveal reveal-delay-1"><div class="skill-group-title">UX Methods</div><ul class="skill-list"><li>Behavior &amp; Persuasive Design</li><li>Heuristic Evaluation</li><li>Usability Testing</li><li>Card Sorting &amp; Tree Testing</li><li>User Journey Mapping</li><li>Design Sprints &amp; Workshops</li></ul></div>
+    <div class="skill-group reveal reveal-delay-2"><div class="skill-group-title">Accessibility</div><ul class="skill-list"><li>WCAG 2.1 AA/AAA</li><li>axe-DevTools &amp; VoiceOver</li><li>Inclusive Design Patterns</li><li>Color Contrast Standards</li><li>Screen Reader Optimization</li><li>Cognitive Accessibility</li></ul></div>
+    <div class="skill-group reveal"><div class="skill-group-title">Design Systems</div><ul class="skill-list"><li>Component Libraries</li><li>Design Tokens</li><li>Zeplin &amp; Figma Inspect</li><li>Design Documentation</li><li>Sprint-level Planning</li><li>Dev &amp; QA Collaboration</li></ul></div>
+    <div class="skill-group reveal reveal-delay-1"><div class="skill-group-title">Frontend</div><ul class="skill-list"><li>HTML / CSS / JavaScript</li><li>React &amp; Next.js</li><li>Tailwind CSS</li><li>Git &amp; GitHub</li><li>Responsive Design</li><li>Dark-mode theming &amp; CSS variables</li><li></li>API Integration</li></ul></div>
+    <div class="skill-group reveal reveal-delay-2"><div class="skill-group-title">Creative</div><ul class="skill-list"><li>Photography (Portrait / Street)</li><li>Graphic Design &amp; Illustration</li><li>AI-generated Artwork</li><li>Podcast Production &amp; Hosting</li><li>Content Strategy</li><li>Video Editing &amp; Reels</li></ul></div>
+  </div>
+</section>
+
+<!-- ================================================================
+     EXPERIENCE
+================================================================ -->
+<section id="experience">
+  <div class="section-label">04 — Experience</div>
+  <div class="exp-grid">
+    <div class="exp-sidebar">
+      <h2 class="section-title">Work<br><em>History</em></h2>
+      <p style="font-size:0.72rem;line-height:1.8;color:var(--muted);">3+ years across EdTech, Fintech, and E-commerce. Currently leading design at Zeus Learning, Mumbai.</p>
+      <a href="#" class="download-btn">↓ Download Resume</a>
+    </div>
+    <div class="exp-list">
+      <div class="exp-item reveal">
+        <div class="exp-period">Jul 2025<br>Present<br><span style="font-size:.58rem;opacity:.7;">9 months</span></div>
+        <div>
+          <div class="exp-company">Zeus Learning</div>
+          <div class="exp-role">Senior UI Designer / Design Analyst</div>
+          <ul class="exp-bullets">
+            <li>Promoted to lead design execution and strategy for large-scale LMS and CMS platforms</li>
+            <li>Mentored 2 junior designers — design direction, feedback, and quality reviews</li>
+            <li>Primary design POC for 32 developers and 8 QA engineers across product modules</li>
+            <li>Drove comprehensive UI revamp defining visual standards, interaction patterns, design systems</li>
+            <li>Collaborated directly with VP of Product and UX leadership on roadmap alignment</li>
+          </ul>
+          <span class="exp-badge">Promoted after 2 years</span>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-period">Aug 2023<br>Jun 2025<br><span style="font-size:.58rem;opacity:.7;">1 yr 11 mo</span></div>
+        <div>
+          <div class="exp-company">Zeus Learning</div>
+          <div class="exp-role">UI Designer / Design Analyst</div>
+          <ul class="exp-bullets">
+            <li>Led end-to-end UX for multiple LMS and CMS modules for enterprise education platforms</li>
+            <li>Redesigned core experiences, modernizing UI patterns and resolving legacy pain points</li>
+            <li>Built responsive designs across 1920px–768px viewports with full edge case coverage</li>
+            <li>Ensured WCAG compliance and created key UX artifacts: IA, wireframes, prototypes</li>
+            <li>Presented design concepts and strategic recommendations to VP of Product</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-period">May 2021<br>Oct 2024<br><span style="font-size:.58rem;opacity:.7;">3 yrs 6 mo</span></div>
+        <div>
+          <div class="exp-company">CodeOS</div>
+          <div class="exp-role">Founder &amp; Host</div>
+          <ul class="exp-bullets">
+            <li>Founded edtech initiative — skill development, career readiness, and hands-on learning</li>
+            <li>Delivered 25+ multi-day workshops (2–15 days) in web dev, mobile, cloud, UI/UX</li>
+            <li>Mentored and instructed 500+ students in Java, HTML/CSS, and design fundamentals</li>
+            <li>Hosted 20+ podcast interviews on YouTube — career journeys, interview prep, industry insights</li>
+            <li>Grew YouTube channel to 1,000+ subscribers and 100,000+ total views</li>
+          </ul>
+          <span class="exp-badge">Founder</span>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-period">Jun 2023<br>Aug 2023<br><span style="font-size:.58rem;opacity:.7;">3 mo</span></div>
+        <div>
+          <div class="exp-company">MAI Labs</div>
+          <div class="exp-role">UI Developer — Consultant</div>
+          <ul class="exp-bullets">
+            <li>Developed company website in Next.js + Tailwind CSS — design to deployment</li>
+            <li>Built reusable components and integrated APIs for contact and job application forms</li>
+            <li>Conducted cross-browser and platform testing for consistent user experience</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-period">Jan 2023<br>Apr 2023<br><span style="font-size:.58rem;opacity:.7;">4 mo</span></div>
+        <div>
+          <div class="exp-company">Corbin Technology Solutions</div>
+          <div class="exp-role">UI/UX Designer</div>
+          <ul class="exp-bullets">
+            <li>Led mobile e-commerce app design from research through handoff</li>
+            <li>Conducted user and usability testing to optimize the user journey</li>
+            <li>Created wireframes and interactive Figma prototypes; facilitated design sprints</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CREATIVE GALLERY
+================================================================ -->
+<section id="creative">
+  <div class="section-label">05 — Creative Work</div>
+  <h2 class="section-title">Through My<br><em>Lens &amp; Brush</em></h2>
+  <p style="font-size:0.78rem;line-height:1.85;color:var(--muted);max-width:560px;margin-bottom:2.5rem;">Photography, graphic design, and AI-generated art — visual storytelling that informs how I see and approach design problems.</p>
+
+  <div class="gallery-tabs">
+    <button class="gallery-tab active" onclick="switchTab('photography', this)">📷 Photography</button>
+    <button class="gallery-tab" onclick="switchTab('graphics', this)">✏️ Graphics</button>
+    <button class="gallery-tab" onclick="switchTab('ai-art', this)">✦ AI Art</button>
+  </div>
+
+  <!-- Photography Panel -->
+  <div class="gallery-panel active" id="tab-photography">
+    <div class="gallery-grid" id="gallery-photography">
+      <div class="gallery-item featured" onclick="openLightbox(this,'photography',0)">
+        <img src="images/photography/photo_1.jpg" alt="Photography 1" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Portrait Study</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this,'photography',1)">
+        <img src="images/photography/photo_2.jpg" alt="Photography 2" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Street Light</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this,'photography',2)">
+        <img src="images/photography/photo_3.jpg" alt="Photography 3" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Urban Geometry</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this,'photography',3)">
+        <img src="images/photography/photo_4.jpg" alt="Photography 4" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Golden Hour</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this,'photography',4)">
+        <img src="images/photography/photo_5.jpg" alt="Photography 5" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Documentary</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this,'photography',5)">
+        <img src="images/photography/photo_6.jpg" alt="Photography 6" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Architecture</span></div>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">↳ To add photos: replace files in <code style="background:var(--cream);padding:0.1rem 0.4rem;font-size:0.65rem;">images/photography/</code> — filenames: photo_1.jpg … photo_6.jpg</p>
+  </div>
+
+  <!-- Graphics Panel -->
+  <div class="gallery-panel" id="tab-graphics">
+    <div class="gallery-grid" id="gallery-graphics">
+      <div class="gallery-item square featured" style="aspect-ratio:2/1" onclick="openLightbox(this,'graphics',0)">
+        <img src="images/graphics/graphic_1.jpg" alt="Graphic 1" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Brand Identity</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'graphics',1)">
+        <img src="images/graphics/graphic_2.jpg" alt="Graphic 2" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Poster Design</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'graphics',2)">
+        <img src="images/graphics/graphic_3.jpg" alt="Graphic 3" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Social Media</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'graphics',3)">
+        <img src="images/graphics/graphic_4.jpg" alt="Graphic 4" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Typography</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'graphics',4)">
+        <img src="images/graphics/graphic_5.jpg" alt="Graphic 5" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Illustration</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'graphics',5)">
+        <img src="images/graphics/graphic_6.svg" alt="Graphic 6" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Motion Frame</span></div>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">↳ To add graphics: replace files in <code style="background:var(--cream);padding:0.1rem 0.4rem;font-size:0.65rem;">images/graphics/</code> — filenames: graphic_1.jpg … graphic_6.jpg</p>
+  </div>
+
+  <!-- AI Art Panel -->
+  <div class="gallery-panel" id="tab-ai-art">
+    <div class="gallery-grid" id="gallery-ai-art">
+      <div class="gallery-item square featured" style="aspect-ratio:2/1" onclick="openLightbox(this,'ai-art',0)">
+        <img src="images/ai-art/ai_art_1.svg" alt="AI Art 1" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Dreamscape I</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'ai-art',1)">
+        <img src="images/ai-art/ai_art_2.svg" alt="AI Art 2" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Neural Bloom</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'ai-art',2)">
+        <img src="images/ai-art/ai_art_3.svg" alt="AI Art 3" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Latent Space</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'ai-art',3)">
+        <img src="images/ai-art/ai_art_4.svg" alt="AI Art 4" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Diffusion Study</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'ai-art',4)">
+        <img src="images/ai-art/ai_art_5.svg" alt="AI Art 5" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Synthetic Nature</span></div>
+      </div>
+      <div class="gallery-item square" onclick="openLightbox(this,'ai-art',5)">
+        <img src="images/ai-art/ai_art_6.svg" alt="AI Art 6" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-caption">Electric Dreams</span></div>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">↳ To add AI art: replace files in <code style="background:var(--cream);padding:0.1rem 0.4rem;font-size:0.65rem;">images/ai-art/</code> — filenames: ai_art_1.jpg … ai_art_6.jpg</p>
+  </div>
+</section>
+
+<!-- ================================================================
+     COMMUNITY / ACTIVITIES
+================================================================ -->
+<section id="community">
+  <div class="section-label">06 — Community &amp; Outreach</div>
+  <div class="activities-intro">
+    <div>
+      <h2 class="section-title" style="margin-bottom:1rem;">Giving back<br>through <em>education.</em></h2>
+      <p>I believe education should be a universal right — a belief that extends beyond my day job into active community involvement. From CSR workshops at colleges to corporate sessions on design thinking, I use every opportunity to make design and tech knowledge accessible.</p>
+      <p>As <strong>Vice Chairman of IETE RAIT</strong>, I organized internal Smart India Hackathons and conducted hands-on workshops on Python and Java. As <strong>Outreach &amp; Media Lead at Codechef RAIT Chapter</strong>, I amplified the community's presence and organized events connecting coding enthusiasts across Mumbai.</p>
+    </div>
+    <div class="activity-stats">
+      <div class="activity-stat-box"><div class="ast-num">500+</div><div class="ast-label">Students Mentored</div></div>
+      <div class="activity-stat-box"><div class="ast-num">25+</div><div class="ast-label">Workshops Delivered</div></div>
+      <div class="activity-stat-box"><div class="ast-num">20+</div><div class="ast-label">Podcast Episodes</div></div>
+      <div class="activity-stat-box"><div class="ast-num">100K+</div><div class="ast-label">YouTube Views</div></div>
+    </div>
+  </div>
+
+  <div class="activities-cards reveal">
+    <div class="activity-card">
+      <div class="ac-icon">🏫</div>
+      <div class="ac-title">CSR Workshops</div>
+      <div class="ac-subtitle">Kotak Mahindra · RAIT</div>
+      <div class="ac-desc">Conducted sessions on UI/UX design fundamentals and career readiness at CSR programs. Topics covered design thinking, Figma basics, and how to break into the design industry.</div>
+      <span class="ac-badge">Community Impact</span>
+    </div>
+    <div class="activity-card">
+      <div class="ac-icon">⚡</div>
+      <div class="ac-title">IETE Smart India Hackathon</div>
+      <div class="ac-subtitle">Vice Chairman · RAIT</div>
+      <div class="ac-desc">Organized and managed the Internal Smart India Hackathon as Vice Chairman of IETE RAIT, igniting innovation among engineering students and creating pathways to the national competition.</div>
+      <span class="ac-badge">Leadership</span>
+    </div>
+    <div class="activity-card">
+      <div class="ac-icon">💻</div>
+      <div class="ac-title">CodeOS Bootcamps</div>
+      <div class="ac-subtitle">Founder · 2021–2024</div>
+      <div class="ac-desc">Planned and delivered 25+ multi-day bootcamps (2–15 days) covering web development, mobile app development, cloud computing, and UI/UX design with project-based curricula.</div>
+      <span class="ac-badge">Founder</span>
+    </div>
+    <div class="activity-card">
+      <div class="ac-icon">🎙</div>
+      <div class="ac-title">Tech Podcast Series</div>
+      <div class="ac-subtitle">Host · CodeOS YouTube</div>
+      <div class="ac-desc">Hosted 20+ interviews focused on interview preparation, career journeys, and industry insights. Grew the channel to 1,000+ subscribers and 100,000+ total views building an engaged learning community.</div>
+      <span class="ac-badge">Content Creator</span>
+    </div>
+    <div class="activity-card">
+      <div class="ac-icon">🏆</div>
+      <div class="ac-title">eYantra Competition</div>
+      <div class="ac-subtitle">Representative · National Level</div>
+      <div class="ac-desc">Represented college at the prestigious eYantra Competition by IIT Bombay, showcasing technical skills in robotics and embedded systems design on a national stage.</div>
+      <span class="ac-badge">National Level</span>
+    </div>
+    <div class="activity-card">
+      <div class="ac-icon">📣</div>
+      <div class="ac-title">Codechef RAIT Chapter</div>
+      <div class="ac-subtitle">Outreach &amp; Media Lead</div>
+      <div class="ac-desc">Amplified the chapter's presence by crafting engaging content and organizing events connecting 300+ coding enthusiasts. Instructed 300+ students in HTML fundamentals and frontend development.</div>
+      <span class="ac-badge">Community</span>
+    </div>
+  </div>
+
+  <!-- Activity Gallery -->
+  <div class="activity-gallery reveal">
+    <div class="activity-gallery-title">From the Ground</div>
+    <div class="activity-gallery-grid">
+      <div class="activity-gallery-item wide" onclick="openLightbox(this,'activities',0)" style="cursor:none;">
+        <img src="images/activities/activity_1.svg" alt="Workshop 1" loading="lazy">
+      </div>
+      <div class="activity-gallery-item" onclick="openLightbox(this,'activities',1)" style="cursor:none;">
+        <img src="images/activities/activity_2.svg" alt="Workshop 2" loading="lazy">
+      </div>
+      <div class="activity-gallery-item" onclick="openLightbox(this,'activities',2)" style="cursor:none;">
+        <img src="images/activities/activity_3.svg" alt="Workshop 3" loading="lazy">
+      </div>
+      <div class="activity-gallery-item" onclick="openLightbox(this,'activities',3)" style="cursor:none;">
+        <img src="images/activities/activity_4.svg" alt="Workshop 4" loading="lazy">
+      </div>
+      <div class="activity-gallery-item wide" onclick="openLightbox(this,'activities',4)" style="cursor:none;">
+        <img src="images/activities/activity_5.svg" alt="Workshop 5" loading="lazy">
+      </div>
+      <div class="activity-gallery-item" onclick="openLightbox(this,'activities',5)" style="cursor:none;">
+        <img src="images/activities/activity_6.svg" alt="Workshop 6" loading="lazy">
+      </div>
+    </div>
+    <p style="margin-top:1.2rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">↳ To add activity photos: replace files in <code style="background:var(--cream);padding:0.1rem 0.4rem;font-size:0.65rem;">images/activities/</code> — filenames: activity_1.jpg … activity_6.jpg</p>
+  </div>
+</section>
+
+<!-- ================================================================
+     CODEOS SPOTLIGHT
+================================================================ -->
+<section class="codeos-section">
+  <div class="section-label">07 — CodeOS</div>
+  <div class="codeos-grid">
+    <div class="codeos-text">
+      <h2 class="section-title" style="margin-bottom:1.2rem;">Building a<br><em>learning community.</em></h2>
+      <p>CodeOS was more than a tutoring initiative — it was an experiment in <strong>designing learning experiences</strong>. I applied the same UX principles I use at Zeus Learning to curriculum design: progressive disclosure, feedback loops, and emotional safety in the learning environment.</p>
+      <p>Every bootcamp was designed with a clear learning arc: from anxiety to competence. Every podcast episode was structured as a journey: problem → struggle → breakthrough. <strong>Design thinking doesn't stop at the screen.</strong></p>
+      <ul class="podcast-list">
+        <li class="podcast-item"><div class="podcast-play">▶</div><span>Ep. 01 — Breaking into UX Design with Zero Experience</span></li>
+        <li class="podcast-item"><div class="podcast-play">▶</div><span>Ep. 07 — From Engineering to Product Design: My Story</span></li>
+        <li class="podcast-item"><div class="podcast-play">▶</div><span>Ep. 14 — WCAG Accessibility: Why Designers Must Care</span></li>
+        <li class="podcast-item"><div class="podcast-play">▶</div><span>Ep. 20 — Behavior Design: Making Products People Love</span></li>
+      </ul>
+    </div>
+    <div class="codeos-metrics">
+      <div class="codeos-m"><div class="codeos-m-num">500+</div><div class="codeos-m-label">Students Mentored</div></div>
+      <div class="codeos-m"><div class="codeos-m-num">25+</div><div class="codeos-m-label">Workshops &amp; Bootcamps</div></div>
+      <div class="codeos-m"><div class="codeos-m-num">100K+</div><div class="codeos-m-label">YouTube Views</div></div>
+      <div class="codeos-m"><div class="codeos-m-num">3.5 yrs</div><div class="codeos-m-label">Running (2021–2024)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT
+================================================================ -->
+<section id="contact" class="contact-section">
+  <div class="section-label">08 — Contact</div>
+  <div class="contact-grid">
+    <div>
+      <h2 class="contact-info-title">Let's create<br>something<br><em>meaningful.</em></h2>
+      <div class="contact-detail">
+        <div class="contact-item">
+          <div class="contact-icon">@</div>
+          <div><div class="contact-item-label">Email</div><div class="contact-item-val">oomkarsk6@gmail.com</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">in</div>
+          <div><div class="contact-item-label">LinkedIn</div><div class="contact-item-val">linkedin.com/in/omkarkhandalkar</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">↗</div>
+          <div><div class="contact-item-label">Location</div><div class="contact-item-val">Mumbai Metropolitan Region, India</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">◉</div>
+          <div><div class="contact-item-label">Portfolio</div><div class="contact-item-val">omkark.netlify.app</div></div>
+        </div>
+      </div>
+      <p style="font-size:0.73rem;line-height:1.8;color:var(--muted);">Open to senior UX/product design roles, accessibility consulting, and speaking opportunities. Especially interested in EdTech, FinTech, and impact-driven products.</p>
+    </div>
+    <div>
+      <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" type="text" placeholder="Jane Smith"></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" placeholder="jane@company.com"></div>
+      <div class="form-group"><label class="form-label">Subject</label><input class="form-input" type="text" placeholder="Job opportunity / Workshop / Collaboration"></div>
+      <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" rows="5" placeholder="Tell me about your project or opportunity..."></textarea></div>
+      <button class="submit-btn"><span>Send Message</span><span>→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 Omkar Khandalkar. Designed with intention.</div>
+  <div class="footer-links">
+    <a href="https://www.behance.net" target="_blank">Behance</a>
+    <a href="https://www.linkedin.com/in/omkarkhandalkar" target="_blank">LinkedIn</a>
+    <a href="https://omkark.netlify.app" target="_blank">Portfolio</a>
+    <a href="#">Instagram</a>
+  </div>
+</footer>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+// ---- CUSTOM CURSOR ----
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cur.style.left = mx+'px'; cur.style.top = my+'px';
+  rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a,button,input,textarea,.gallery-item,.activity-gallery-item').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('big'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('big'));
+});
+
+// ---- FORCE DARK THEME ----
+const html = document.documentElement;
+// always use dark mode
+html.setAttribute('data-theme', 'dark');
+// optionally persist choice for future visits
+localStorage.setItem('theme', 'dark');
+
+// ---- CASE STUDY TOGGLE ----
+function toggleCase(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.querySelector('span:last-child').textContent = open ? 'Close Case Study' : 'Read Case Study';
+}
+
+// ---- GALLERY TABS ----
+function switchTab(name, btn) {
+  document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.gallery-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ---- LIGHTBOX ----
+let lbImages = [], lbIndex = 0;
+function openLightbox(el, category, idx) {
+  const imgs = document.querySelectorAll('#tab-'+category+' .gallery-item img, .activity-gallery-item img');
+  lbImages = Array.from(imgs).map(i => i.src);
+  lbIndex = idx;
+  document.getElementById('lightboxImg').src = lbImages[idx];
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lightboxNav(dir) {
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  document.getElementById('lightboxImg').src = lbImages[lbIndex];
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') lightboxNav(1);
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+});
+
+// ---- SCROLL REVEAL ----
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// ---- HERO PARALLAX ----
+window.addEventListener('scroll', () => {
+  const n = document.querySelector('.hero-name');
+  if (n) n.style.transform = 'translateY('+(window.scrollY*0.1)+'px)';
+});
+</script>
+</body>
+</html>
