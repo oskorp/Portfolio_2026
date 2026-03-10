@@ -972,6 +972,7 @@ ul { list-style: none; }
   .nav-links {
     position: fixed;
     top: 64px; left: 0; right: 0;
+    width: 100%;
     flex-direction: column;
     background: var(--white);
     padding: 1.5rem var(--gutter) 2rem;
@@ -981,6 +982,9 @@ ul { list-style: none; }
     transition: transform .35s var(--ease);
     z-index: 99;
     align-items: flex-start;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    box-sizing: border-box;
   }
   .nav-links.open { transform: translateY(0); }
   .nav-links a { font-size: 1rem; }
